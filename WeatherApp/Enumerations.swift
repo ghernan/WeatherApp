@@ -8,8 +8,40 @@
 
 import Foundation
 
-public enum TemperatureUnit : String{
-    case celcius = "metric"
-    case farenheit = "imperial"
-    case defalt = ""
+public enum TemperatureUnit : Int{
+    case celsius = 0
+    case fahrenheit
+    case defalt
+    
+    func name() -> String{
+        switch self {
+        case .celsius:
+            return "Celsius"
+        case .fahrenheit:
+            return "Fahrenheit"
+        default:
+            return ""
+        }
+    }
+    func queryParameter() -> String{
+        switch self {
+        case .celsius:
+            return "metric"
+        case .fahrenheit:
+            return "imperial"
+        default:
+            return ""
+        }
+    }
+    func measureUnit() -> String{
+        switch self {
+        case .celsius:
+            return "°c"
+        case .fahrenheit:
+            return "°f"
+        default:
+            return ""
+        }
+
+    }
 }

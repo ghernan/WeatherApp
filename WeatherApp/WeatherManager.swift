@@ -44,7 +44,7 @@ class WeatherManager{
                 print("Dictionary does not contain results key")
                 return forecast
             }
-            forecast.append(Weather(withJSONObject: weatherJSONObj))
+            forecast.append(Weather(withJSONForecast: weatherJSONObj))
         }
 
         return forecast

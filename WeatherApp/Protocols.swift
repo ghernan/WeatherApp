@@ -11,5 +11,4 @@ import CoreLocation
 
 protocol LocationManagerDelegate {
     func locationDidUpdate(toLocation location : CLLocation, inCity : String )
-    
 }

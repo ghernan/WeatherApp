@@ -9,6 +9,7 @@
 import UIKit
 
 class ForecastController: UIViewController {
+    let dateManager = DateManager()
     private let manager: WeatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
     
@@ -25,6 +26,8 @@ class ForecastController: UIViewController {
     @IBOutlet weak var sixthDayLabel: UILabel!
     
     @IBOutlet weak var seventhDayLabel: UILabel!
+    
+    
     
     
     
@@ -45,8 +48,9 @@ class ForecastController: UIViewController {
             seventhDayLabel
         ]
     }
-    func setTemperature(onLabel label: UILabel, with weather: Weather){
-        label.text = "\(label.text!) \(weather.minTemp) / \(weather.maxTemp)"
+    func setTemperature(forWeekDay day: Int, onLabel label: UILabel, with weather: Weather){
+        let tempInterval = "\(weather.minTemp) / \(weather.maxTemp)"
+        label.text = (day<2) ? "\(label.text!) \(tempInterval)" : "\(dateManager.getDayName(inDays: day)): \(tempInterval)"
     }
     func setLabels(){
         
@@ -55,7 +59,7 @@ class ForecastController: UIViewController {
                                     DispatchQueue.main.async {
                                         self.stackLabels()
                                         for index in 0..<forecast.count{
-                                            self.setTemperature(onLabel: self.labelStack[index], with: forecast[index])
+                                            self.setTemperature(forWeekDay: index, onLabel: self.labelStack[index], with: forecast[index])
                                         }
                                     }
                                 },

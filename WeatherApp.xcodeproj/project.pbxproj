@@ -23,6 +23,7 @@
 		9CCCC88A1EB1875D00CE2D98 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC8891EB1875D00CE2D98 /* Protocols.swift */; };
 		9CCCC88C1EB1BD9D00CE2D98 /* ForecastController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88B1EB1BD9D00CE2D98 /* ForecastController.swift */; };
 		9CCCC88E1EB1D14A00CE2D98 /* Enumerations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88D1EB1D14A00CE2D98 /* Enumerations.swift */; };
+		9CCCC8901EB2B5C100CE2D98 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88F1EB2B5C100CE2D98 /* DateManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		9CCCC8891EB1875D00CE2D98 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		9CCCC88B1EB1BD9D00CE2D98 /* ForecastController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastController.swift; sourceTree = "<group>"; };
 		9CCCC88D1EB1D14A00CE2D98 /* Enumerations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enumerations.swift; sourceTree = "<group>"; };
+		9CCCC88F1EB2B5C100CE2D98 /* DateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +172,7 @@
 			children = (
 				9CB46A211EB07CFB00D505AE /* LocationManager.swift */,
 				9CCCC8861EB169B100CE2D98 /* WeatherManager.swift */,
+				9CCCC88F1EB2B5C100CE2D98 /* DateManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CCCC8811EB1645600CE2D98 /* WeatherService.swift in Sources */,
+				9CCCC8901EB2B5C100CE2D98 /* DateManager.swift in Sources */,
 				9CB46A221EB07CFB00D505AE /* LocationManager.swift in Sources */,
 				9CCCC8871EB169B100CE2D98 /* WeatherManager.swift in Sources */,
 				9CCCC88A1EB1875D00CE2D98 /* Protocols.swift in Sources */,
