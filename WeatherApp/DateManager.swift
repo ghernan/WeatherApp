@@ -14,10 +14,18 @@ class DateManager{
     private var calendar =  Calendar(identifier: .gregorian)
     private var dateComponent = DateComponents()
         
-    func getDayName(inDays days:Int)->String{
-        dateComponent.day = days
-        let newDate = calendar.date(byAdding: dateComponent, to: date)!
-        formatter.dateFormat = "EEEE"
-        return formatter.string(from: newDate)
+    func getDayName(inDaysFromNow day:Int)->String{
+        switch day {
+        case 0:
+            return "Today"
+        case 1:
+            return "Tomorrow"
+        default:
+            dateComponent.day = day
+            let newDate = calendar.date(byAdding: dateComponent, to: date)!
+            formatter.dateFormat = "EEEE"
+            return formatter.string(from: newDate)
+        }
+        
     }
 }

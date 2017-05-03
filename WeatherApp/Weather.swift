@@ -9,19 +9,34 @@
 import Foundation
 
 struct Weather {
-    var minTemp: Int
-    var maxTemp: Int
-    var currentTemp: Int
+    var minTemp: Int = -100
+    var maxTemp: Int = -100
+    var currentTemp: Int = -100
+    var dateString: String?
+    var tempUnit: TemperatureUnit?
     
     
     init(with dict: JSONDictionary){
-        minTemp = dict["temp_min"] as! Int
-        maxTemp = dict["temp_max"] as! Int
-        currentTemp = dict["temp"] as! Int
+        if let min = dict["temp_min"] as? Int{
+            minTemp = min
+        }
+        if let max = dict["temp_max"] as? Int{
+            maxTemp = max
+        }
+        if let current = dict["temp"] as? Int{
+            currentTemp = current
+        }
+        
     }
     init(withJSONForecast object: JSONDictionary){
-        minTemp = object["min"] as! Int
-        maxTemp = object["max"] as! Int
-        currentTemp = object["eve"] as! Int
+        if let min = object["min"] as? Int{
+            minTemp = min
+        }
+        if let max = object["max"] as? Int{
+            maxTemp = max
+        }
+        if let current = object["eve"] as? Int{
+            currentTemp = current
+        }
     }
 }

@@ -7,60 +7,41 @@
 //
 
 import UIKit
+import CoreLocation
 
 class ForecastController: UIViewController {
     let dateManager = DateManager()
     private let manager: WeatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
-    
-    @IBOutlet weak var todayLabel: UILabel!
-    
-    @IBOutlet weak var tomorrowLabel: UILabel!
-    
-    @IBOutlet weak var thirdDayLabel: UILabel!
-    
-    @IBOutlet weak var fourthDayLabel: UILabel!
-    
-    @IBOutlet weak var fifthDayLabel: UILabel!
-    
-    @IBOutlet weak var sixthDayLabel: UILabel!
-    
-    @IBOutlet weak var seventhDayLabel: UILabel!
+    var forecast: [Weather] = []
+    var tempUnit: TemperatureUnit = .defalt
+    var currentCity = ""
+
+    @IBOutlet weak var tableView: UITableView!
     
     
-    
-    
+    override func viewDidAppear(_ animated: Bool) {
+        LocationManager.shared.delegate = self
+        navigationItem.title = currentCity
+        
+    }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        setLabels()
+        tableView.tableFooterView = UIView()
+        getForecast()
+        
 
     }
-    func stackLabels(){
-        labelStack=[
-            todayLabel,
-            tomorrowLabel,
-            thirdDayLabel,
-            fourthDayLabel,
-            fifthDayLabel,
-            sixthDayLabel,
-            seventhDayLabel
-        ]
-    }
-    func setTemperature(forWeekDay day: Int, onLabel label: UILabel, with weather: Weather){
-        let tempInterval = "\(weather.minTemp) / \(weather.maxTemp)"
-        label.text = (day<2) ? "\(label.text!) \(tempInterval)" : "\(dateManager.getDayName(inDays: day)): \(tempInterval)"
-    }
-    func setLabels(){
+    
+    func getForecast(){
         
-        manager.persistForecast(successHandler: { (forecast) in
+        manager.persistWeather(withWeatherInfo: .forecast, forCity: currentCity, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
-                                        self.stackLabels()
-                                        for index in 0..<forecast.count{
-                                            self.setTemperature(forWeekDay: index, onLabel: self.labelStack[index], with: forecast[index])
-                                        }
+                                        self.forecast = forecast
+                                        self.tableView.reloadData()
                                     }
                                 },
                                 errorHandler: {error in
@@ -68,3 +49,40 @@ class ForecastController: UIViewController {
                                 })
     }   
 }
+extension ForecastController: UITableViewDelegate{
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 70
+    }
+}
+
+extension ForecastController: UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return forecast.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "forecastCell") as! ForecastCell
+        let index = indexPath.row
+        var weather = forecast[index]
+        weather.dateString = dateManager.getDayName(inDaysFromNow: index)
+        weather.tempUnit = tempUnit
+        cell.configureCell(withWeather: weather )
+        return cell
+    }
+    
+}
+extension ForecastController: LocationManagerDelegate{
+    
+    func locationDidUpdate(toLocation location: CLLocation, inCity: String) {
+        if currentCity != inCity{
+            currentCity = inCity
+            navigationItem.title = currentCity
+            getForecast()
+        }
+    }
+}
+
+

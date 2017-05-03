@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C4897A81EB9B521003F1CF8 /* ForecastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C4897A71EB9B521003F1CF8 /* ForecastCell.swift */; };
 		9CAA4F791EB061F100A6BCDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAA4F781EB061F100A6BCDA /* AppDelegate.swift */; };
 		9CAA4F7B1EB061F100A6BCDA /* WeatherController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CAA4F7A1EB061F100A6BCDA /* WeatherController.swift */; };
 		9CAA4F7E1EB061F100A6BCDA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CAA4F7C1EB061F100A6BCDA /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9C4897A71EB9B521003F1CF8 /* ForecastCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastCell.swift; sourceTree = "<group>"; };
 		9CAA4F751EB061F100A6BCDA /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CAA4F781EB061F100A6BCDA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9CAA4F7A1EB061F100A6BCDA /* WeatherController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherController.swift; sourceTree = "<group>"; };
@@ -94,6 +96,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9C4897A51EB9AEB4003F1CF8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				9C4897A61EB9AEC7003F1CF8 /* Cells */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
+		9C4897A61EB9AEC7003F1CF8 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				9C4897A71EB9B521003F1CF8 /* ForecastCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		9CAA4F6C1EB061F100A6BCDA = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +139,7 @@
 				9CAA4FA71EB0642400A6BCDA /* Services */,
 				9CAA4FA81EB0643E00A6BCDA /* Managers */,
 				9CAA4FA91EB0644E00A6BCDA /* Views */,
+				9C4897A51EB9AEB4003F1CF8 /* Components */,
 				9CCCC8881EB1866400CE2D98 /* Utils */,
 				9CAA4F781EB061F100A6BCDA /* AppDelegate.swift */,
 				9CAA4F7C1EB061F100A6BCDA /* Main.storyboard */,
@@ -343,6 +362,7 @@
 				9CAA4F7B1EB061F100A6BCDA /* WeatherController.swift in Sources */,
 				9CCCC8831EB1649C00CE2D98 /* Weather.swift in Sources */,
 				9CAA4F791EB061F100A6BCDA /* AppDelegate.swift in Sources */,
+				9C4897A81EB9B521003F1CF8 /* ForecastCell.swift in Sources */,
 				9CCCC88E1EB1D14A00CE2D98 /* Enumerations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,17 +13,17 @@ import CoreLocation
 
 class LocationManager: NSObject{
     static let shared : LocationManager = LocationManager()
-    private let locationManager = CLLocationManager()
+    private let clManager = CLLocationManager()
     var currentLocation : CLLocation!
     var currentCity : String!
-    var delegate : LocationManagerDelegate!
+    var delegate : LocationManagerDelegate?
     
     private override init(){
         super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
+        clManager.delegate = self
+        clManager.desiredAccuracy = kCLLocationAccuracyBest
+        clManager.requestAlwaysAuthorization()
+        clManager.startUpdatingLocation()
     }
 }
 
@@ -36,7 +36,7 @@ extension LocationManager : CLLocationManagerDelegate{
                                                                 self.currentCity = cityString
             
                                                                 DispatchQueue.main.async {
-                                                                    self.delegate.locationDidUpdate(toLocation: self.currentLocation, inCity: self.currentCity)
+                                                                    self.delegate?.locationDidUpdate(toLocation: self.currentLocation, inCity: self.currentCity)
                                                               }
             
                                                               },
@@ -82,7 +82,11 @@ extension LocationManager : CLLocationManagerDelegate{
                 noAccess(notifyUser())
             case .authorizedAlways, .authorizedWhenInUse:
                 withAccess("Weather App has been previously authorized for location services.")
+            
+                
             }
+            
+            
         } else {
             print("Location services are not enabled")
         }

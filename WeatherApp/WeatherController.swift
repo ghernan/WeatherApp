@@ -14,7 +14,8 @@ class WeatherController: UIViewController {
     let manager = WeatherManager()
     var currrentLat = 0.0
     var currrentLong = 0.0
-    var currentCity = ""
+    var currentCity = "Chihuahua"
+    var tempUnit: TemperatureUnit = .celsius
     var currentTempUnit = "°c"
     
     @IBOutlet weak var cityLabel: UILabel!
@@ -37,25 +38,34 @@ class WeatherController: UIViewController {
     
     @IBAction func changeDegreeUnit(_ sender: UISegmentedControl) {
         let unit = TemperatureUnit(rawValue: sender.selectedSegmentIndex)!
-        manager.setDegreeUnit(withTempUnit: unit)
-        currentTempUnit = unit.measureUnit()
-        degreeLabel.text = unit.name()
+        tempUnit = unit
+        
+        currentTempUnit = tempUnit.measureUnit()
+        degreeLabel.text = tempUnit.name()
         setLabels()
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        LocationManager.shared.delegate = self
+        checkLocationServicesStatus()
+        
+    }
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        LocationManager.shared.delegate = self
-        LocationManager.shared.checkLocationServices(noAccess: { (alert) in
-                                                        self.present(alert, animated: true, completion: {
-                                                            
-                                                        })
-                                                    },
-                                                     withAccess: {message in
-                                                        print(message)
-                                                    })
         
+        NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
+        
+    }
+    func checkLocationServicesStatus(){
+        LocationManager.shared.checkLocationServices(
+            noAccess: { (alert) in
+                self.present(alert, animated: true, completion: {})
+        },
+            withAccess: {message in
+                print(message)
+        })
+    
     }
     
     func setTemperatureLabels(_ weather:Weather){
@@ -65,12 +75,12 @@ class WeatherController: UIViewController {
     }
     func setLabels(){
         
-        manager.persistWeather(successHandler: { (weather) in
+        manager.persistWeather(withWeatherInfo: .current, forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (weather) in
             
                                                 DispatchQueue.main.async {
                                                         self.cityLabel.text = self.currentCity
                                                         self.locationLabel.text = "\(self.currrentLat), \(self.currrentLong)"
-                                                        self.setTemperatureLabels(weather)
+                                                        self.setTemperatureLabels(weather[0])
                                                 }
             
             
@@ -82,16 +92,28 @@ class WeatherController: UIViewController {
         
     
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier! {
+        case "mainToForecast":
+            if let destination = segue.destination as? ForecastController{
+                destination.currentCity = currentCity
+                destination.tempUnit = tempUnit
+                
+            }
+        default: break
+        }
+    }
 }
 
 extension WeatherController: LocationManagerDelegate{
     
     func locationDidUpdate(toLocation location: CLLocation, inCity: String) {
         if currentCity != inCity{
+            
             currentCity = inCity
+            
             currrentLat = location.coordinate.latitude
-            currrentLong = location.coordinate.longitude
-            manager.setNewCity(withString: currentCity)
+            currrentLong = location.coordinate.longitude            
             setLabels()
         }
     }
