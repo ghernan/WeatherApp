@@ -9,8 +9,12 @@
 import Foundation
 
 class WeatherService{
+    
     private let apiManager = APIManager.shared
-
+    private var queryUnitItem = URLQueryItem(name: "units", value: "metric")
+    private var queryCityItem = URLQueryItem(name: "q", value: "Chihuahua")
+    private var appIDQueryItem = URLQueryItem(name: "APPID", value: "0eb7a1c1573c34b2e8c005f3dcbd0201")
+    
     func getWeather(withWeatherInfo type: WeatherInfoType,forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt, successHandler: @escaping (_ dict: JSONDictionary)->(), errorHandler:@escaping (_ error:Error)->()){
         
         let task = APIManager.shared.session.dataTask(with: createURL(withWeatherInfo: type, forCity: cityString, forDegreeUnit: unit)) { (data, response, error) in
@@ -24,6 +28,7 @@ class WeatherService{
                 successHandler(dict)
             } catch let parseError as NSError {
                 print("JSONSerialization error: \(parseError.localizedDescription)\n")
+                errorHandler(parseError)
             }
             
         }
@@ -39,12 +44,12 @@ class WeatherService{
     
     private func getURLWeatherQueryItemsList(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt) -> [URLQueryItem]{
         if cityString != ""{
-            apiManager.queryCityItem.value = cityString
+            queryCityItem.value = cityString
         }
         if unit.queryParameter() != ""{
-            apiManager.queryUnitItem.value = unit.queryParameter()
+            queryUnitItem.value = unit.queryParameter()
         }
-        return [apiManager.appIDQueryItem,apiManager.queryCityItem,apiManager.queryUnitItem]
+        return [appIDQueryItem,queryCityItem,queryUnitItem]
     
     }
 

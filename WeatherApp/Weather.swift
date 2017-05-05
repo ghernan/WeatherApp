@@ -12,8 +12,8 @@ struct Weather {
     var minTemp: Int = -100
     var maxTemp: Int = -100
     var currentTemp: Int = -100
-    var dateString: String?
-    var tempUnit: TemperatureUnit?
+    var dateString = ""
+    var tempUnit: TemperatureUnit = .defalt
     
     
     init(with dict: JSONDictionary){

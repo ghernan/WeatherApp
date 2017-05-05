@@ -11,7 +11,7 @@ import CoreLocation
 
 class ForecastController: UIViewController {
     let dateManager = DateManager()
-    private let manager: WeatherManager = WeatherManager()
+    private let weatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
     var forecast: [Weather] = []
     var tempUnit: TemperatureUnit = .defalt
@@ -37,7 +37,7 @@ class ForecastController: UIViewController {
     
     func getForecast(){
         
-        manager.persistWeather(withWeatherInfo: .forecast, forCity: currentCity, successHandler: { (forecast) in
+        weatherManager.persistForecast( forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
                                         self.forecast = forecast

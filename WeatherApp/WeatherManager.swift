@@ -11,35 +11,41 @@ import Foundation
 class WeatherManager{
     private let weatherService: WeatherService = WeatherService()
     
-    func persistWeather(withWeatherInfo type: WeatherInfoType,forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistForecast(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
         
-        weatherService.getWeather(withWeatherInfo: type,forCity:cityString, forDegreeUnit: unit, successHandler: { (dictionary) in
-                                switch type{
-                                case .current:
-                                    if let weather = self.getParsedWeather(fromJSONDictionary: dictionary){
-                                        successHandler([weather])
-                                    }
-                                    else{
-                                        successHandler([])
-                                    }
-                                    
-                                case .forecast:
+        weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forDegreeUnit: unit,
+                                  successHandler: { (dictionary) in
+            
                                     if let weather = self.getParsedForecast(fromJSONDictionary: dictionary){
                                         successHandler(weather)
                                     }
                                     else{
                                         successHandler([])
                                     }
-
-            
-                            }
-            
-                            },
-                            errorHandler: {error in
-                                print("Error: \(error.localizedDescription)")
-                                errorHandler(error)
-                            })
+                                },
+                                  errorHandler: {error in
+                                    print("Error: \(error.localizedDescription)")
+                                    errorHandler(error)
+                                })
     }
+    func persistCurrentWeather(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
+        
+        weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forDegreeUnit: unit,
+                                  successHandler: { (dictionary) in
+            
+                                            if let weather = self.getParsedWeather(fromJSONDictionary: dictionary){
+                                                        successHandler(weather)
+                                            }
+                                            else{
+                                                successHandler(nil)
+                                            }
+                                },
+                                  errorHandler: {error in
+                                    print("Error: \(error.localizedDescription)")
+                                    errorHandler(error)
+                                })
+    }
+    
     
     private func getParsedForecast(fromJSONDictionary dict: JSONDictionary) -> [Weather]?{
         var forecast : [Weather] = []
@@ -71,7 +77,7 @@ class WeatherManager{
         }
         weather = Weather(with: weatherDictionary)
         
-        return(weather)
+        return weather
     }
 
 

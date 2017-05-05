@@ -11,7 +11,7 @@ import CoreLocation
 
 class WeatherController: UIViewController {
     
-    let manager = WeatherManager()
+    let weatherManager = WeatherManager()
     var currrentLat = 0.0
     var currrentLong = 0.0
     var currentCity = "Chihuahua"
@@ -49,6 +49,9 @@ class WeatherController: UIViewController {
         checkLocationServicesStatus()
         
     }
+    deinit{
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
+    }
 
     override func viewDidLoad() {
         
@@ -75,19 +78,23 @@ class WeatherController: UIViewController {
     }
     func setLabels(){
         
-        manager.persistWeather(withWeatherInfo: .current, forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (weather) in
+        weatherManager.persistCurrentWeather( forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (weather) in
             
                                                 DispatchQueue.main.async {
                                                         self.cityLabel.text = self.currentCity
                                                         self.locationLabel.text = "\(self.currrentLat), \(self.currrentLong)"
-                                                        self.setTemperatureLabels(weather[0])
+                                                    if let weather = weather{
+                                                        self.setTemperatureLabels(weather)
+                                                    }
+                                                        
+                                                    
                                                 }
             
             
             
                                                 },
                                                 errorHandler: {error in
-                                                
+                                                    print(error)
                                                 })
         
     
