@@ -13,7 +13,7 @@ class WeatherService{
     private let apiManager = APIManager.shared
     private var queryUnitItem = URLQueryItem(name: "units", value: "metric")
     private var queryCityItem = URLQueryItem(name: "q", value: "Chihuahua")
-    private var appIDQueryItem = URLQueryItem(name: "APPID", value: "0eb7a1c1573c34b2e8c005f3dcbd0201")
+    
     
     func getWeather(withWeatherInfo type: WeatherInfoType,forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt, successHandler: @escaping (_ dict: JSONDictionary)->(), errorHandler:@escaping (_ error:Error)->()){
         
@@ -26,7 +26,7 @@ class WeatherService{
             do {
                 let dict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! JSONDictionary
                 successHandler(dict)
-            } catch let parseError as NSError {
+            } catch let parseError {
                 print("JSONSerialization error: \(parseError.localizedDescription)\n")
                 errorHandler(parseError)
             }
@@ -37,9 +37,9 @@ class WeatherService{
     }
 
     private func createURL(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt)->URL{
-        var urlWeatherComponents = URLComponents(string:(apiManager.baseURL+type.getURLStringComponent()))!
-        urlWeatherComponents.queryItems = getURLWeatherQueryItemsList(forCity: cityString, forDegreeUnit: unit)
-        return urlWeatherComponents.url!
+        let urlWeatherString = apiManager.baseURL+type.getURLStringComponent()
+        let urlWeatherQueryList  = getURLWeatherQueryItemsList(forCity: cityString, forDegreeUnit: unit)
+        return APIManager.shared.returnURL(fromURLString: urlWeatherString, withQueryItems: urlWeatherQueryList)
     }
     
     private func getURLWeatherQueryItemsList(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt) -> [URLQueryItem]{
@@ -49,7 +49,7 @@ class WeatherService{
         if unit.queryParameter() != ""{
             queryUnitItem.value = unit.queryParameter()
         }
-        return [appIDQueryItem,queryCityItem,queryUnitItem]
+        return [queryCityItem,queryUnitItem]
     
     }
 
