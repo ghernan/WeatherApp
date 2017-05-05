@@ -16,8 +16,8 @@ class WeatherManager{
         weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forDegreeUnit: unit,
                                   successHandler: { (dictionary) in
             
-                                    if let weather = self.getParsedForecast(fromJSONDictionary: dictionary){
-                                        successHandler(weather)
+                                    if let forecast = self.getParsedForecast(fromJSONDictionary: dictionary){
+                                        successHandler(forecast)
                                     }
                                     else{
                                         successHandler([])
@@ -33,12 +33,9 @@ class WeatherManager{
         weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forDegreeUnit: unit,
                                   successHandler: { (dictionary) in
             
-                                            if let weather = self.getParsedWeather(fromJSONDictionary: dictionary){
-                                                        successHandler(weather)
-                                            }
-                                            else{
-                                                successHandler(nil)
-                                            }
+                                    let weather = self.getParsedWeather(fromJSONDictionary: dictionary)
+                                    successHandler(weather)
+                                            
                                 },
                                   errorHandler: {error in
                                     print("Error: \(error.localizedDescription)")

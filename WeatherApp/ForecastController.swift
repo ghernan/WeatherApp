@@ -40,7 +40,12 @@ class ForecastController: UIViewController {
         weatherManager.persistForecast( forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
+                                        
                                         self.forecast = forecast
+                                        for index in 0..<self.forecast.count{
+                                            self.forecast[index].tempUnit = self.tempUnit
+                                            self.forecast[index].dateString = self.dateManager.getDayName(inDaysFromNow: index)
+                                        }
                                         self.tableView.reloadData()
                                     }
                                 },
@@ -64,11 +69,9 @@ extension ForecastController: UITableViewDataSource{
         return forecast.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "forecastCell") as! ForecastCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ForecastCell.reusableIdentifier) as! ForecastCell
         let index = indexPath.row
-        var weather = forecast[index]
-        weather.dateString = dateManager.getDayName(inDaysFromNow: index)
-        weather.tempUnit = tempUnit
+        let weather = forecast[index]
         cell.configureCell(withWeather: weather )
         return cell
     }

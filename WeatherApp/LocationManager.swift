@@ -93,8 +93,8 @@ extension LocationManager : CLLocationManagerDelegate{
     }
     
     private func notifyUser()->UIAlertController{
-        let alert = UIAlertController(title: "Location",
-                                      message: "Enabled location is needed for WeatherApp to work properly. You can change location services by tapping Settings button.",
+        let alert = UIAlertController(title: "Enabled location is needed for WeatherApp to work properly. You can change location services by tapping Settings button.",
+                                      message: "Chihuahua city will be used as default for demonstration purposes.",
                                       preferredStyle: UIAlertControllerStyle.alert)
         
         let cancelAction = UIAlertAction(title: "OK",style: .cancel){action in

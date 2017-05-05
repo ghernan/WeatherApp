@@ -19,7 +19,7 @@ public enum TemperatureUnit : Int{
             return "Celsius"
         case .fahrenheit:
             return "Fahrenheit"
-        default:
+        case .defalt:
             return ""
         }
     }
@@ -29,7 +29,7 @@ public enum TemperatureUnit : Int{
             return "metric"
         case .fahrenheit:
             return "imperial"
-        default:
+        case .defalt:
             return ""
         }
     }
@@ -39,7 +39,7 @@ public enum TemperatureUnit : Int{
             return "°c"
         case .fahrenheit:
             return "°f"
-        default:
+        case .defalt:
             return ""
         }
 

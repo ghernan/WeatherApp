@@ -37,16 +37,16 @@ class WeatherService{
     }
 
     private func createURL(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt)->URL{
-        let urlWeatherString = apiManager.baseURL+type.getURLStringComponent()
+        let urlWeatherStringComponent = type.getURLStringComponent()
         let urlWeatherQueryList  = getURLWeatherQueryItemsList(forCity: cityString, forDegreeUnit: unit)
-        return APIManager.shared.returnURL(fromURLString: urlWeatherString, withQueryItems: urlWeatherQueryList)
+        return APIManager.shared.returnURL(fromURLStringComponent: urlWeatherStringComponent, withQueryItems: urlWeatherQueryList)
     }
     
     private func getURLWeatherQueryItemsList(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt) -> [URLQueryItem]{
         if cityString != ""{
             queryCityItem.value = cityString
         }
-        if unit.queryParameter() != ""{
+        if unit != .defalt{
             queryUnitItem.value = unit.queryParameter()
         }
         return [queryCityItem,queryUnitItem]

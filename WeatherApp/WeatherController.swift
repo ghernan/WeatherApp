@@ -58,6 +58,7 @@ class WeatherController: UIViewController {
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
+        setLabels()
         
     }
     func checkLocationServicesStatus(){

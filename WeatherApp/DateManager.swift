@@ -16,6 +16,7 @@ class DateManager{
         
     func getDayName(inDaysFromNow day:Int)->String{
         switch day {
+        
         case 0:
             return "Today"
         case 1:

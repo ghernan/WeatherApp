@@ -40,3 +40,10 @@ struct Weather {
         }
     }
 }
+extension Weather : Equatable{
+    
+    public static func ==(w1: Weather, w2: Weather) -> Bool{
+        return w1.currentTemp == w2.currentTemp && w1.minTemp == w2.minTemp && w1.maxTemp == w2.maxTemp
+    }
+    
+}
