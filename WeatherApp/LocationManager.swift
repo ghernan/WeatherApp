@@ -19,8 +19,13 @@ class LocationManager: NSObject {
     
     static let shared : LocationManager = LocationManager()
     var currentLocation : CLLocation!
-    var currentCity : String!
-    weak var delegate : LocationManagerDelegate?
+    var currentLatitude = 0.0
+    var currentLongitude = 0.0
+    var currentCity = "Chihuahua"
+    var didUpdate:(()->())?
+    
+    
+    fileprivate weak var delegate : LocationManagerDelegate?
     
     private let coreLocationManager: CLLocationManager = {
         let manager = CLLocationManager()
@@ -106,17 +111,24 @@ extension LocationManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         self.currentLocation = locations.last
+        self.currentLatitude = self.currentLocation.coordinate.latitude
+        self.currentLongitude = self.currentLocation.coordinate.longitude
+        NotificationCenter.default.post(name: Notification.Name("locationUpdated"), object: self, userInfo: nil)
         getReverseLocation(fromLocation: self.currentLocation, successHandler: { (cityString) in
                                                                 self.currentCity = cityString
-                                                                self.delegate?.locationDidUpdate(toLocation: self.currentLocation, inCity: self.currentCity)
-                                                              },
+                                              self.didUpdate?()
+            
+                                            },
                                                               errorHandler: {error in
                                                                 print(error)
                                                               })
     }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if (status == CLAuthorizationStatus.denied) {
-            notifyUser().show(delegate as! UIViewController, sender: self)
+            if let viewController =  UIApplication.shared.keyWindow?.rootViewController {
+                notifyUser().show(viewController, sender: self)
+            }
+            
         } else if (status == CLAuthorizationStatus.authorizedAlways) {
             // The user accepted authorization
         } 

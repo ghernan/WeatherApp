@@ -14,9 +14,9 @@ class WeatherManager{
     
     //MARK: - Public methods
     
-    func persistForecast(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistForecast(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
         
-        weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forDegreeUnit: unit,
+        weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
             
                                     let forecast = self.getParsedForecast(fromJSONDictionary: dictionary)
@@ -30,7 +30,7 @@ class WeatherManager{
     }
     func persistCurrentWeather(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
         
-        weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forDegreeUnit: unit,
+        weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
             
                                     let weather = self.getParsedWeather(fromJSONDictionary: dictionary)

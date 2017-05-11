@@ -10,11 +10,12 @@ import UIKit
 import CoreLocation
 
 class ForecastController: UIViewController {
-    var forecast: [Weather] = []
+    
     var tempUnit: TemperatureUnit = .undef
-    var currentCity = ""
+    
     private let weatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
+    fileprivate var forecast: [Weather] = []
     
 
     //MARK: - IBOutlets from UI
@@ -24,8 +25,8 @@ class ForecastController: UIViewController {
     //MARK: - Controller life cycle functions
     
     override func viewDidAppear(_ animated: Bool) {
-        LocationManager.shared.delegate = self
-        navigationItem.title = currentCity
+        
+        navigationItem.title = LocationManager.shared.currentCity
         
     }
     
@@ -33,14 +34,15 @@ class ForecastController: UIViewController {
         
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
+        NotificationCenter.default.addObserver(self, selector: #selector(getForecast), name: Notification.Name("locationUpdated"), object: nil)
         getForecast()
-        
+       
 
     }
-    //MARK: - Private methods
-    fileprivate func getForecast(){
+    //MARK: - Public methods
+    func getForecast() {
         
-        weatherManager.persistForecast( forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (forecast) in
+        weatherManager.persistForecast( forCity: LocationManager.shared.currentCity, forTemperatureUnit: tempUnit, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
                                         
@@ -49,6 +51,7 @@ class ForecastController: UIViewController {
                                             weather.tempUnit = self.tempUnit
                                          
                                         }
+                                        self.navigationItem.title = LocationManager.shared.currentCity
                                         self.tableView.reloadData()
                                     }
                                 },
@@ -83,18 +86,4 @@ extension ForecastController: UITableViewDataSource{
     }
     
 }
-
-//MARK: - LocationManagerDelegate
-
-extension ForecastController: LocationManagerDelegate{
-    
-    func locationDidUpdate(toLocation location: CLLocation, inCity: String) {
-        if currentCity != inCity{
-            currentCity = inCity
-            navigationItem.title = currentCity
-            getForecast()
-        }
-    }
-}
-
 
