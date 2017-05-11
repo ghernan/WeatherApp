@@ -91,6 +91,7 @@ class WeatherController: UIViewController {
         })
     
     }
+    
     func setLabels(){
         
         
@@ -122,8 +123,6 @@ class WeatherController: UIViewController {
         maxTempLabel.text = "\(weather.maxTemp!)\(tempUnit.measureUnit())"
         minTempLabel.text = "\(weather.minTemp!)\(tempUnit.measureUnit())"
     }
-
-
 }
 
 

@@ -84,7 +84,6 @@ extension ForecastController: UITableViewDataSource{
         let weather = forecast[index]
         cell.configureCell(withWeather: weather )
         return cell
-    }
-    
+    }    
 }
 

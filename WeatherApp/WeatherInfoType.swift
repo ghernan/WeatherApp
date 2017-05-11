@@ -18,7 +18,6 @@ public enum WeatherInfoType{
             return "weather"
         case .forecast:
             return "forecast/daily"
-        }
-        
+        }        
     }
 }

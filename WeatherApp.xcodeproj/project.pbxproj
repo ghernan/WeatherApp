@@ -26,7 +26,7 @@
 		9CCCC8871EB169B100CE2D98 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC8861EB169B100CE2D98 /* WeatherManager.swift */; };
 		9CCCC88C1EB1BD9D00CE2D98 /* ForecastController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88B1EB1BD9D00CE2D98 /* ForecastController.swift */; };
 		9CCCC88E1EB1D14A00CE2D98 /* TemperatureUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88D1EB1D14A00CE2D98 /* TemperatureUnit.swift */; };
-		9CCCC8901EB2B5C100CE2D98 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88F1EB2B5C100CE2D98 /* DateExtension.swift */; };
+		9CCCC8901EB2B5C100CE2D98 /* Date+DayName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCCC88F1EB2B5C100CE2D98 /* Date+DayName.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,7 +72,7 @@
 		9CCCC8861EB169B100CE2D98 /* WeatherManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
 		9CCCC88B1EB1BD9D00CE2D98 /* ForecastController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForecastController.swift; sourceTree = "<group>"; };
 		9CCCC88D1EB1D14A00CE2D98 /* TemperatureUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemperatureUnit.swift; sourceTree = "<group>"; };
-		9CCCC88F1EB2B5C100CE2D98 /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		9CCCC88F1EB2B5C100CE2D98 /* Date+DayName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+DayName.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +103,7 @@
 		9C40F31E1EC43D1500C0BC06 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				9CCCC88F1EB2B5C100CE2D98 /* DateExtension.swift */,
+				9CCCC88F1EB2B5C100CE2D98 /* Date+DayName.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -382,7 +382,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CCCC8811EB1645600CE2D98 /* WeatherService.swift in Sources */,
-				9CCCC8901EB2B5C100CE2D98 /* DateExtension.swift in Sources */,
+				9CCCC8901EB2B5C100CE2D98 /* Date+DayName.swift in Sources */,
 				9CB46A221EB07CFB00D505AE /* LocationManager.swift in Sources */,
 				9CCCC8871EB169B100CE2D98 /* WeatherManager.swift in Sources */,
 				9CCCC88C1EB1BD9D00CE2D98 /* ForecastController.swift in Sources */,

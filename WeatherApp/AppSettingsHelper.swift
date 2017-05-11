@@ -22,7 +22,4 @@ class AppSettingsHelper{
             print("could not go to settings")
         }
     }
-    
-
-
 }

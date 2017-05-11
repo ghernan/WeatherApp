@@ -28,14 +28,11 @@ class LocationManager: NSObject {
     fileprivate weak var delegate : LocationManagerDelegate?
     
     private let coreLocationManager: CLLocationManager = {
+        
         let manager = CLLocationManager()
-        //manager.delegate = LocationManager.shared
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
-        //manager.startUpdatingLocation()
-        
         return manager
-    
     }()
     
     //MARK: - Public methods
@@ -51,18 +48,16 @@ class LocationManager: NSObject {
     }
     
     func checkLocationServices(noAccess: @escaping(_ alert:UIAlertController) -> (), withAccess: @escaping(_ message:String)->()) {
+        
         if CLLocationManager.locationServicesEnabled() {
             switch(CLLocationManager.authorizationStatus()) {
             case .notDetermined, .restricted, .denied:
                 noAccess(notifyUser())
             case .authorizedAlways, .authorizedWhenInUse:
                 withAccess("Weather App has been previously authorized for location services.")
-                
-                
             }
-            
-            
-        } else {
+        }
+        else {
             print("Location services are not enabled")
         }
     }
@@ -70,6 +65,7 @@ class LocationManager: NSObject {
     //MARK: - Private methods
     
     fileprivate func notifyUser() -> UIAlertController {
+        
         let alert = UIAlertController(title: "Enabled location is needed for WeatherApp to work properly.",
                                       message: "Chihuahua city will be used as default for demonstration purposes.",
                                       preferredStyle: UIAlertControllerStyle.alert)
@@ -77,9 +73,11 @@ class LocationManager: NSObject {
         let cancelAction = UIAlertAction(title: "OK",style: .cancel){action in
             alert.dismiss(animated: true){}
         }
+        
         let changeSettingsAction = UIAlertAction(title: "Go to Settings",style: .default){action in
             AppSettingsHelper.navigateToLocationSettings()
         }
+        
         alert.addAction(cancelAction)
         alert.addAction(changeSettingsAction)
         return alert
@@ -123,6 +121,7 @@ extension LocationManager : CLLocationManagerDelegate {
                                                                 print(error)
                                                               })
     }
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if (status == CLAuthorizationStatus.denied) {
             if let viewController =  UIApplication.shared.keyWindow?.rootViewController {

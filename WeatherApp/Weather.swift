@@ -30,8 +30,8 @@ class Weather {
         minTemp = min
         maxTemp = max
         currentTemp = current
-        
     }
+    
     init(withJSONForecast weather: JSONDictionary, withUnixTimeStamp stamp: Double) throws {
         guard let min = weather["min"] as? Int else {
             throw SerializationError.missing("Minimum Temperature")
@@ -46,8 +46,7 @@ class Weather {
         minTemp = min
         maxTemp = max
         currentTemp = current
-        dateString = Date(timeIntervalSince1970: stamp).getDayName()
-        
+        dateString = Date(timeIntervalSince1970: stamp).getDayName()        
     }
 }
 

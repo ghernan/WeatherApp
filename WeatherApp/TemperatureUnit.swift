@@ -42,7 +42,6 @@ public enum TemperatureUnit : Int{
         case .undef:
             return ""
         }
-
     }
 }
 
