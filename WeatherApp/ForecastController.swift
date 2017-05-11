@@ -39,6 +39,11 @@ class ForecastController: UIViewController {
        
 
     }
+    deinit{
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("locationUpdated"), object: nil)
+    }
+
     //MARK: - Public methods
     func getForecast() {
         
@@ -47,10 +52,6 @@ class ForecastController: UIViewController {
                                     DispatchQueue.main.async {
                                         
                                         self.forecast = forecast
-                                        for weather in self.forecast {
-                                            weather.tempUnit = self.tempUnit
-                                         
-                                        }
                                         self.navigationItem.title = LocationManager.shared.currentCity
                                         self.tableView.reloadData()
                                     }

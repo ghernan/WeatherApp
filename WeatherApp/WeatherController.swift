@@ -94,7 +94,7 @@ class WeatherController: UIViewController {
     func setLabels(){
         
         
-        weatherManager.persistCurrentWeather( forCity: LocationManager.shared.currentCity, forDegreeUnit: tempUnit, successHandler: { (weather) in
+        weatherManager.persistCurrentWeather( forCity: LocationManager.shared.currentCity, forTemperatureUnit: tempUnit, successHandler: { (weather) in
             
                                                 DispatchQueue.main.async {
                                                         self.cityLabel.text = LocationManager.shared.currentCity

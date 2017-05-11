@@ -32,7 +32,7 @@ class Weather {
         currentTemp = current
         
     }
-    init(withJSONForecast weather: JSONDictionary, withUnixTimeStamp stamp: Int) throws {
+    init(withJSONForecast weather: JSONDictionary, withUnixTimeStamp stamp: Double) throws {
         guard let min = weather["min"] as? Int else {
             throw SerializationError.missing("Minimum Temperature")
             
@@ -46,17 +46,10 @@ class Weather {
         minTemp = min
         maxTemp = max
         currentTemp = current
-        dateString = Date(timeIntervalSince1970: TimeInterval(stamp)).getDayName()
+        dateString = Date(timeIntervalSince1970: stamp).getDayName()
         
     }
 }
 
 
 
-extension Weather : Equatable{
-    
-    public static func ==(w1: Weather, w2: Weather) -> Bool{
-        return w1.currentTemp == w2.currentTemp && w1.minTemp == w2.minTemp && w1.maxTemp == w2.maxTemp
-    }
-    
-}

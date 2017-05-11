@@ -13,6 +13,8 @@ extension Date{
     func getDayName() -> String {        
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
+        formatter.timeZone = TimeZone(abbreviation:"GMT")       
+        
         return formatter.string(from: self) == formatter.string(from: Date()) ? "Today" : formatter.string(from: self)
     }
 }

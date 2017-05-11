@@ -19,7 +19,7 @@ class WeatherManager{
         weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
             
-                                    let forecast = self.getParsedForecast(fromJSONDictionary: dictionary)
+                                    let forecast = self.getParsedForecast(fromJSONDictionary: dictionary, withTemperatureUnit: unit)
                                     successHandler(forecast)
                                    
                                 },
@@ -28,7 +28,7 @@ class WeatherManager{
                                     errorHandler(error)
                                 })
     }
-    func persistCurrentWeather(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistCurrentWeather(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
         
         weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
@@ -45,7 +45,7 @@ class WeatherManager{
     
     //MARK: - Private methods
     
-    private func getParsedForecast(fromJSONDictionary dict: JSONDictionary) -> [Weather] {
+    private func getParsedForecast(fromJSONDictionary dict: JSONDictionary, withTemperatureUnit unit: TemperatureUnit) -> [Weather] {
         var forecast : [Weather] = []
         guard let results = dict["list"] as? [JSONDictionary]  else {
             print("Dictionary does not contain results key\n")
@@ -57,11 +57,12 @@ class WeatherManager{
                 print("Dictionary does not contain temp key")
                 return forecast
             }
-            guard let date = weatherDict["dt"] as? Int else {
+            guard let date = weatherDict["dt"] as? Double else {
                 print("Dictionary does not contain dt key")
                 return forecast
             }
             if let weather = try? Weather(withJSONForecast: weatherJSONObj, withUnixTimeStamp: date){
+                weather.tempUnit = unit
                 forecast.append(weather)
             }
             
