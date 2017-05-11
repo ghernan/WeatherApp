@@ -11,7 +11,7 @@ import Foundation
 public enum TemperatureUnit : Int{
     case celsius = 0
     case fahrenheit
-    case defalt
+    case undef
     
     func name() -> String{
         switch self {
@@ -19,7 +19,7 @@ public enum TemperatureUnit : Int{
             return "Celsius"
         case .fahrenheit:
             return "Fahrenheit"
-        case .defalt:
+        case .undef:
             return ""
         }
     }
@@ -29,7 +29,7 @@ public enum TemperatureUnit : Int{
             return "metric"
         case .fahrenheit:
             return "imperial"
-        case .defalt:
+        case .undef:
             return ""
         }
     }
@@ -39,23 +39,10 @@ public enum TemperatureUnit : Int{
             return "°c"
         case .fahrenheit:
             return "°f"
-        case .defalt:
+        case .undef:
             return ""
         }
 
     }
 }
-public enum WeatherInfoType{
-    case current
-    case forecast
-    
-    func getURLStringComponent() -> String{
-        switch self{
-        case .current:
-            return "weather"
-        case .forecast:
-            return "forecast/daily"
-        }
-        
-    }
-}
+

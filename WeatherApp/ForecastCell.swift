@@ -16,11 +16,7 @@ class ForecastCell: UITableViewCell{
     
     @IBOutlet weak var dayLabel: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        
-    }
+
     public static var reusableIdentifier: String{
         return String(describing: self)
     }
@@ -28,13 +24,9 @@ class ForecastCell: UITableViewCell{
     
     func configureCell(withWeather weather: Weather) {
         
-            maxTempLabel.text = "\(weather.maxTemp)\(weather.tempUnit.measureUnit())"
-            minTempLabel.text = "\(weather.minTemp)\(weather.tempUnit.measureUnit())"
-            dayLabel.text = weather.dateString
-        
-        
-        
-        
+            maxTempLabel.text = "\(weather.maxTemp!)\(weather.tempUnit.measureUnit())"
+            minTempLabel.text = "\(weather.minTemp!)\(weather.tempUnit.measureUnit())"
+            dayLabel.text = weather.dateString        
     }
 
 }

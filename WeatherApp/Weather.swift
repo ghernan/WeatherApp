@@ -8,38 +8,51 @@
 
 import Foundation
 
-struct Weather {
-    var minTemp: Int = -100
-    var maxTemp: Int = -100
-    var currentTemp: Int = -100
+class Weather {
+    var minTemp: Int?
+    var maxTemp: Int?
+    var currentTemp: Int?
     var dateString = ""
-    var tempUnit: TemperatureUnit = .defalt
+    var tempUnit: TemperatureUnit = .undef
     
     
-    init(with dict: JSONDictionary){
-        if let min = dict["temp_min"] as? Int{
-            minTemp = min
+    init(with dictionary: JSONDictionary) throws{
+        guard let min = dictionary["temp_min"] as? Int else {
+            throw SerializationError.missing("Minimum Temperature")
+            
         }
-        if let max = dict["temp_max"] as? Int{
-            maxTemp = max
+        guard let max = dictionary["temp_max"] as? Int else {
+            throw SerializationError.missing("Maximum Temperature")
         }
-        if let current = dict["temp"] as? Int{
-            currentTemp = current
+        guard let current = dictionary["temp"] as? Int else {
+            throw SerializationError.missing("Current Temperature")
         }
+        minTemp = min
+        maxTemp = max
+        currentTemp = current
         
     }
-    init(withJSONForecast object: JSONDictionary){
-        if let min = object["min"] as? Int{
-            minTemp = min
+    init(withJSONForecast weather: JSONDictionary, withUnixTimeStamp stamp: Int) throws {
+        guard let min = weather["min"] as? Int else {
+            throw SerializationError.missing("Minimum Temperature")
+            
         }
-        if let max = object["max"] as? Int{
-            maxTemp = max
+        guard let max = weather["max"] as? Int else {
+            throw SerializationError.missing("Maximum Temperature")
         }
-        if let current = object["eve"] as? Int{
-            currentTemp = current
+        guard let current = weather["eve"] as? Int else {
+            throw SerializationError.missing("Current Temperature")
         }
+        minTemp = min
+        maxTemp = max
+        currentTemp = current
+        dateString = Date(timeIntervalSince1970: TimeInterval(stamp)).getDayName()
+        
     }
 }
+
+
+
 extension Weather : Equatable{
     
     public static func ==(w1: Weather, w2: Weather) -> Bool{

@@ -10,15 +10,18 @@ import UIKit
 import CoreLocation
 
 class ForecastController: UIViewController {
-    let dateManager = DateManager()
+    var forecast: [Weather] = []
+    var tempUnit: TemperatureUnit = .undef
+    var currentCity = ""
     private let weatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
-    var forecast: [Weather] = []
-    var tempUnit: TemperatureUnit = .defalt
-    var currentCity = ""
+    
 
+    //MARK: - IBOutlets from UI
+    
     @IBOutlet weak var tableView: UITableView!
     
+    //MARK: - Controller life cycle functions
     
     override func viewDidAppear(_ animated: Bool) {
         LocationManager.shared.delegate = self
@@ -34,17 +37,17 @@ class ForecastController: UIViewController {
         
 
     }
-    
-    func getForecast(){
+    //MARK: - Private methods
+    fileprivate func getForecast(){
         
         weatherManager.persistForecast( forCity: currentCity, forDegreeUnit: tempUnit, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
                                         
                                         self.forecast = forecast
-                                        for index in 0..<self.forecast.count{
-                                            self.forecast[index].tempUnit = self.tempUnit
-                                            self.forecast[index].dateString = self.dateManager.getDayName(inDaysFromNow: index)
+                                        for weather in self.forecast {
+                                            weather.tempUnit = self.tempUnit
+                                         
                                         }
                                         self.tableView.reloadData()
                                     }
@@ -54,6 +57,8 @@ class ForecastController: UIViewController {
                                 })
     }   
 }
+
+//MARK: - UITableViewDelegate
 extension ForecastController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -62,6 +67,7 @@ extension ForecastController: UITableViewDelegate{
     }
 }
 
+//MARK: - UITableViewDataSource
 extension ForecastController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,6 +83,9 @@ extension ForecastController: UITableViewDataSource{
     }
     
 }
+
+//MARK: - LocationManagerDelegate
+
 extension ForecastController: LocationManagerDelegate{
     
     func locationDidUpdate(toLocation location: CLLocation, inCity: String) {

@@ -9,26 +9,26 @@
 import Foundation
 
 class WeatherManager{
+    
     private let weatherService: WeatherService = WeatherService()
     
-    func persistForecast(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
+    //MARK: - Public methods
+    
+    func persistForecast(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
         
         weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forDegreeUnit: unit,
                                   successHandler: { (dictionary) in
             
-                                    if let forecast = self.getParsedForecast(fromJSONDictionary: dictionary){
-                                        successHandler(forecast)
-                                    }
-                                    else{
-                                        successHandler([])
-                                    }
+                                    let forecast = self.getParsedForecast(fromJSONDictionary: dictionary)
+                                    successHandler(forecast)
+                                   
                                 },
                                   errorHandler: {error in
                                     print("Error: \(error.localizedDescription)")
                                     errorHandler(error)
                                 })
     }
-    func persistCurrentWeather(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .defalt,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistCurrentWeather(forCity cityString: String="", forDegreeUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
         
         weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forDegreeUnit: unit,
                                   successHandler: { (dictionary) in
@@ -43,36 +43,43 @@ class WeatherManager{
                                 })
     }
     
+    //MARK: - Private methods
     
-    private func getParsedForecast(fromJSONDictionary dict: JSONDictionary) -> [Weather]?{
+    private func getParsedForecast(fromJSONDictionary dict: JSONDictionary) -> [Weather] {
         var forecast : [Weather] = []
-        guard let results = dict["list"] as? [Any]  else {
+        guard let results = dict["list"] as? [JSONDictionary]  else {
             print("Dictionary does not contain results key\n")
             return forecast
         }
-        for weatherDict in results{
-            guard let weatherDict = weatherDict as? JSONDictionary else{
-                print("Could not parse JSON object")
+        for weatherDict in results {
+            
+            guard let weatherJSONObj = weatherDict["temp"] as? JSONDictionary else {
+                print("Dictionary does not contain temp key")
                 return forecast
             }
-            guard let weatherJSONObj = weatherDict["temp"] as? JSONDictionary else{
-                print("Dictionary does not contain results key")
+            guard let date = weatherDict["dt"] as? Int else {
+                print("Dictionary does not contain dt key")
                 return forecast
             }
-            forecast.append(Weather(withJSONForecast: weatherJSONObj))
+            if let weather = try? Weather(withJSONForecast: weatherJSONObj, withUnixTimeStamp: date){
+                forecast.append(weather)
+            }
+            
         }
 
         return forecast
     }
     
-    private func getParsedWeather(fromJSONDictionary dict: JSONDictionary) -> Weather?{
+    private func getParsedWeather(fromJSONDictionary dict: JSONDictionary) -> Weather? {
         var weather : Weather!
         
         guard let weatherDictionary = dict["main"] as? JSONDictionary  else {
             print("Dictionary does not contain results key\n")
             return weather
         }
-        weather = Weather(with: weatherDictionary)
+        if let currentWeather = try? Weather(with: weatherDictionary){
+            weather = currentWeather
+        }
         
         return weather
     }

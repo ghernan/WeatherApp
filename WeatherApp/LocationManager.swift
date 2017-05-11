@@ -9,45 +9,78 @@
 import UIKit
 import CoreLocation
 
-
-
-class LocationManager: NSObject{
-    static let shared : LocationManager = LocationManager()
-    private let clManager = CLLocationManager()
-    var currentLocation : CLLocation!
-    var currentCity : String!
-    var delegate : LocationManagerDelegate?
+protocol LocationManagerDelegate : class{
     
-    private override init(){
-        super.init()
-        clManager.delegate = self
-        clManager.desiredAccuracy = kCLLocationAccuracyBest
-        clManager.requestAlwaysAuthorization()
-        clManager.startUpdatingLocation()
-    }
+    func locationDidUpdate(toLocation location : CLLocation, inCity : String )
+
 }
 
-extension LocationManager : CLLocationManagerDelegate{
+class LocationManager: NSObject {
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    static let shared : LocationManager = LocationManager()
+    var currentLocation : CLLocation!
+    var currentCity : String!
+    weak var delegate : LocationManagerDelegate?
+    
+    private let coreLocationManager: CLLocationManager = {
+        let manager = CLLocationManager()
+        //manager.delegate = LocationManager.shared
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        //manager.startUpdatingLocation()
         
-        self.currentLocation = locations.last
-        getLocationString(withLocation: self.currentLocation, successHandler: { (cityString) in
-                                                                self.currentCity = cityString
-            
-                                                                DispatchQueue.main.async {
-                                                                    self.delegate?.locationDidUpdate(toLocation: self.currentLocation, inCity: self.currentCity)
-                                                              }
-            
-                                                              },
-                                                              errorHandler: {error in
-                                                                print(error)
-                                                              })
-        
+        return manager
+    
+    }()
+    
+    //MARK: - Public methods
+    
+    
+    func startUpdating() {
+        coreLocationManager.delegate = self
+        coreLocationManager.startUpdatingLocation()
     }
     
+    func stopUpdating() {
+        coreLocationManager.stopUpdatingLocation()
+    }
     
-    private func getLocationString(withLocation location: CLLocation, successHandler: @escaping (_ cityString:String) -> (), errorHandler: @escaping (_ error: Error) -> ()) {
+    func checkLocationServices(noAccess: @escaping(_ alert:UIAlertController) -> (), withAccess: @escaping(_ message:String)->()) {
+        if CLLocationManager.locationServicesEnabled() {
+            switch(CLLocationManager.authorizationStatus()) {
+            case .notDetermined, .restricted, .denied:
+                noAccess(notifyUser())
+            case .authorizedAlways, .authorizedWhenInUse:
+                withAccess("Weather App has been previously authorized for location services.")
+                
+                
+            }
+            
+            
+        } else {
+            print("Location services are not enabled")
+        }
+    }
+    
+    //MARK: - Private methods
+    
+    fileprivate func notifyUser() -> UIAlertController {
+        let alert = UIAlertController(title: "Enabled location is needed for WeatherApp to work properly.",
+                                      message: "Chihuahua city will be used as default for demonstration purposes.",
+                                      preferredStyle: UIAlertControllerStyle.alert)
+        
+        let cancelAction = UIAlertAction(title: "OK",style: .cancel){action in
+            alert.dismiss(animated: true){}
+        }
+        let changeSettingsAction = UIAlertAction(title: "Go to Settings",style: .default){action in
+            AppSettingsHelper.navigateToLocationSettings()
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(changeSettingsAction)
+        return alert
+    }
+    
+    fileprivate func getReverseLocation(fromLocation location: CLLocation, successHandler: @escaping (_ cityString:String) -> (), errorHandler: @escaping (_ error: Error) -> ()) {
         
         let coder = CLGeocoder()
         coder.reverseGeocodeLocation(location) { (placemarks:[CLPlacemark]?, error:Error?) in
@@ -63,48 +96,32 @@ extension LocationManager : CLLocationManagerDelegate{
         }
     }
     
-    func showLocationSettings(){
-        if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {            
-            UIApplication.shared.open(settingsURL, options: [:], completionHandler: { (didOpen) in
-                print("to app settings")
-                print(didOpen)
-            })
-        }
-        else{
-            print("could not go to settings")
-        }
-    }
+
+}
+
+// MARK: - CLLocationManagerDelegate
+
+extension LocationManager : CLLocationManagerDelegate {
     
-    func checkLocationServices(noAccess: @escaping(_ alert:UIAlertController)->(), withAccess: @escaping(_ message:String)->()){
-        if CLLocationManager.locationServicesEnabled() {
-            switch(CLLocationManager.authorizationStatus()) {
-            case .notDetermined, .restricted, .denied:
-                noAccess(notifyUser())
-            case .authorizedAlways, .authorizedWhenInUse:
-                withAccess("Weather App has been previously authorized for location services.")
-            
-                
-            }
-            
-            
-        } else {
-            print("Location services are not enabled")
-        }
-    }
-    
-    private func notifyUser()->UIAlertController{
-        let alert = UIAlertController(title: "Enabled location is needed for WeatherApp to work properly. You can change location services by tapping Settings button.",
-                                      message: "Chihuahua city will be used as default for demonstration purposes.",
-                                      preferredStyle: UIAlertControllerStyle.alert)
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        let cancelAction = UIAlertAction(title: "OK",style: .cancel){action in
-            alert.dismiss(animated: true){}
-        }
-        let changeSettingsAction = UIAlertAction(title: "Go to Settings",style: .default){action in
-            self.showLocationSettings()
-        }
-        alert.addAction(cancelAction)
-        alert.addAction(changeSettingsAction)
-        return alert
+        self.currentLocation = locations.last
+        getReverseLocation(fromLocation: self.currentLocation, successHandler: { (cityString) in
+                                                                self.currentCity = cityString
+                                                                self.delegate?.locationDidUpdate(toLocation: self.currentLocation, inCity: self.currentCity)
+                                                              },
+                                                              errorHandler: {error in
+                                                                print(error)
+                                                              })
     }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == CLAuthorizationStatus.denied) {
+            notifyUser().show(delegate as! UIViewController, sender: self)
+        } else if (status == CLAuthorizationStatus.authorizedAlways) {
+            // The user accepted authorization
+        } 
+    }
+    
+    
+    
 }
