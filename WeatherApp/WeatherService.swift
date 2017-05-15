@@ -16,7 +16,7 @@ class WeatherService{
     
     //MARK: - Public methods
     
-    func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef, successHandler: @escaping (_ dict: JSONDictionary)->(),  errorHandler:@escaping (_ error:Error)->()){
+    func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined, successHandler: @escaping (_ dict: JSONDictionary)->(),  errorHandler:@escaping (_ error:Error)->()){
         
         let task = apiManager.session.dataTask(with: createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit)) { (data, response, error) in
             
@@ -39,17 +39,17 @@ class WeatherService{
     
     //MARK: - Private methods
 
-    private func createURL(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef) -> URL {
+    private func createURL(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined) -> URL {
         let urlWeatherStringComponent = type.getURLStringComponent()
         let urlWeatherQueryList  = getURLWeatherQueryItemsList(forCity: cityString, forTemperatureUnit: unit)
         return apiManager.returnURL(fromURLStringComponent: urlWeatherStringComponent, withQueryItems: urlWeatherQueryList)
     }
     
-    private func getURLWeatherQueryItemsList(forCity cityString: String="",  forTemperatureUnit unit: TemperatureUnit = .undef) -> [URLQueryItem] {
+    private func getURLWeatherQueryItemsList(forCity cityString: String="",  forTemperatureUnit unit: TemperatureUnit = .undefined) -> [URLQueryItem] {
         if cityString != ""{
             queryCityItem.value = cityString
         }
-        if unit != .undef{
+        if unit != .undefined{
             queryUnitItem.value = unit.queryParameter()
         }
         return [queryCityItem,queryUnitItem]

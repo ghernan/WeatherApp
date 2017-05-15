@@ -9,6 +9,5 @@
 import Foundation
 
 public enum SerializationError: Error {
-    case missing(String)
-    case invalid(String, Any)
+    case missing(message: String)    
 }

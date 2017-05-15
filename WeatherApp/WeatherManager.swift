@@ -14,7 +14,7 @@ class WeatherManager{
     
     //MARK: - Public methods
     
-    func persistForecast(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistForecast(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined,successHandler: @escaping (_ forecast:[Weather])->(), errorHandler: @escaping (_ error: Error)->()){
         
         weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
@@ -28,7 +28,7 @@ class WeatherManager{
                                     errorHandler(error)
                                 })
     }
-    func persistCurrentWeather(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undef,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
+    func persistCurrentWeather(forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined,successHandler: @escaping (_ weather:Weather?)->(), errorHandler: @escaping (_ error: Error)->()){
         
         weatherService.getWeather(withWeatherInfo: .current,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in

@@ -11,7 +11,7 @@ import Foundation
 public enum TemperatureUnit : Int{
     case celsius = 0
     case fahrenheit
-    case undef
+    case undefined
     
     func name() -> String{
         switch self {
@@ -19,7 +19,7 @@ public enum TemperatureUnit : Int{
             return "Celsius"
         case .fahrenheit:
             return "Fahrenheit"
-        case .undef:
+        case .undefined:
             return ""
         }
     }
@@ -29,7 +29,7 @@ public enum TemperatureUnit : Int{
             return "metric"
         case .fahrenheit:
             return "imperial"
-        case .undef:
+        case .undefined:
             return ""
         }
     }
@@ -39,7 +39,7 @@ public enum TemperatureUnit : Int{
             return "°c"
         case .fahrenheit:
             return "°f"
-        case .undef:
+        case .undefined:
             return ""
         }
     }

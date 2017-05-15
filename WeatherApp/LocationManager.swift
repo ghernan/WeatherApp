@@ -17,12 +17,12 @@ protocol LocationManagerDelegate : class{
 
 class LocationManager: NSObject {
     
-    static let shared : LocationManager = LocationManager()
-    var currentLocation : CLLocation!
+    
+    fileprivate var currentLocation : CLLocation!
     var currentLatitude = 0.0
     var currentLongitude = 0.0
-    var currentCity = "Chihuahua"
-    var didUpdate:(()->())?
+    fileprivate var currentCity = "Chihuahua"
+    var didUpdateLocation:((_ location: CLLocation, _ city: String) -> Void)?
     
     
     fileprivate weak var delegate : LocationManagerDelegate?
@@ -83,7 +83,7 @@ class LocationManager: NSObject {
         return alert
     }
     
-    fileprivate func getReverseLocation(fromLocation location: CLLocation, successHandler: @escaping (_ cityString:String) -> (), errorHandler: @escaping (_ error: Error) -> ()) {
+     fileprivate func getReverseLocation(fromLocation location: CLLocation, successHandler: @escaping (_ cityString:String) -> (), errorHandler: @escaping (_ error: Error) -> ()) {
         
         let coder = CLGeocoder()
         coder.reverseGeocodeLocation(location) { (placemarks:[CLPlacemark]?, error:Error?) in
@@ -114,7 +114,7 @@ extension LocationManager : CLLocationManagerDelegate {
         NotificationCenter.default.post(name: Notification.Name("locationUpdated"), object: self, userInfo: nil)
         getReverseLocation(fromLocation: self.currentLocation, successHandler: { (cityString) in
                                                                 self.currentCity = cityString
-                                              self.didUpdate?()
+                                              self.didUpdateLocation?(self.currentLocation, self.currentCity)
             
                                             },
                                                               errorHandler: {error in

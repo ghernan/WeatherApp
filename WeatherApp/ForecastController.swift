@@ -11,11 +11,14 @@ import CoreLocation
 
 class ForecastController: UIViewController {
     
-    var tempUnit: TemperatureUnit = .undef
+    var tempUnit: TemperatureUnit = .undefined
+    
+    //MARK: - Private attributes
     
     private let weatherManager = WeatherManager()
     private var labelStack: [UILabel] = []
     fileprivate var forecast: [Weather] = []
+    fileprivate var locationManager = LocationManager()
     
 
     //MARK: - IBOutlets from UI
@@ -23,43 +26,41 @@ class ForecastController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     //MARK: - Controller life cycle functions
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
-        navigationItem.title = LocationManager.shared.currentCity
-        
-    }
+
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        NotificationCenter.default.addObserver(self, selector: #selector(getForecast), name: Notification.Name("locationUpdated"), object: nil)
-        getForecast()
+        locationManager.startUpdating()
+        locationManager.didUpdateLocation = { location, city in
+            self.getForecast(inCity: city)
+            self.navigationItem.title = city
+
+        }
+       
+        
        
 
     }
-    deinit{
-        
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("locationUpdated"), object: nil)
-    }
+    
 
     //MARK: - Public methods
-    func getForecast() {
+    func getForecast( inCity city: String) {
         
-        weatherManager.persistForecast( forCity: LocationManager.shared.currentCity, forTemperatureUnit: tempUnit, successHandler: { (forecast) in
+        weatherManager.persistForecast( forCity: city, forTemperatureUnit: tempUnit, successHandler: { (forecast) in
             
                                     DispatchQueue.main.async {
                                         
                                         self.forecast = forecast
-                                        self.navigationItem.title = LocationManager.shared.currentCity
+                                        self.navigationItem.title = city
                                         self.tableView.reloadData()
                                     }
                                 },
                                 errorHandler: {error in
                                 print(error)
                                 })
-    }   
+    }
 }
 
 //MARK: - UITableViewDelegate

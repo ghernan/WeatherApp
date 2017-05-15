@@ -12,6 +12,7 @@ import CoreLocation
 class WeatherController: UIViewController {
     
     private let weatherManager = WeatherManager()
+    private let locationManager = LocationManager()
     
     private var tempUnit: TemperatureUnit = .celsius
     
@@ -43,7 +44,7 @@ class WeatherController: UIViewController {
         tempUnit = unit
         
         degreeLabel.text = tempUnit.name()
-        setLabels()
+        
     }
     
     
@@ -56,9 +57,14 @@ class WeatherController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
         
-        LocationManager.shared.startUpdating()
-        NotificationCenter.default.addObserver(self, selector: #selector(setLabels), name: Notification.Name("locationUpdated"), object: nil)
-        setLabels()
+        locationManager.startUpdating()
+        locationManager.didUpdateLocation = { location, city in
+            self.setLabels(forLocation: location, inCity: city)
+        }
+        
+    
+        
+        
         
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -76,13 +82,13 @@ class WeatherController: UIViewController {
     
     deinit{
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("locationUpdated"), object: nil)
+        
     }
     
     
     //MARK: - Public methods
     func checkLocationServicesStatus(){
-        LocationManager.shared.checkLocationServices(
+        locationManager.checkLocationServices(
             noAccess: { (alert) in
                 self.present(alert, animated: true, completion: {})
         },
@@ -92,15 +98,15 @@ class WeatherController: UIViewController {
     
     }
     
-    func setLabels(){
+    func setLabels(forLocation location: CLLocation, inCity city: String){
         
         
-        weatherManager.persistCurrentWeather( forCity: LocationManager.shared.currentCity, forTemperatureUnit: tempUnit, successHandler: { (weather) in
+        weatherManager.persistCurrentWeather( forCity: city, forTemperatureUnit: tempUnit, successHandler: { (weather) in
             
                                                 DispatchQueue.main.async {
-                                                        self.cityLabel.text = LocationManager.shared.currentCity
+                                                        self.cityLabel.text = city
                                                     
-                                                        self.locationLabel.text = "\(LocationManager.shared.currentLatitude), \(LocationManager.shared.currentLongitude)"
+                                                        self.locationLabel.text = "\(location.coordinate.latitude), \(location.coordinate.longitude)"
                                                     if let weather = weather{
                                                         self.setTemperatureLabels(weather)
                                                     }

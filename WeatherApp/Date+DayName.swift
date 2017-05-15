@@ -10,11 +10,12 @@ import UIKit
 
 extension Date{
     
-    func getDayName() -> String {        
+    func dayName() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
-        formatter.timeZone = TimeZone(abbreviation:"GMT")       
+        formatter.timeZone = TimeZone(abbreviation:"GMT")
+        let dayName = formatter.string(from: self)
         
-        return formatter.string(from: self) == formatter.string(from: Date()) ? "Today" : formatter.string(from: self)
+        return dayName == formatter.string(from: Date()) ? "Today" : dayName
     }
 }
