@@ -36,12 +36,7 @@ class ForecastController: UIViewController {
         locationManager.didUpdateLocation = { [weak self] location, city in
             self?.getForecast(inCity: city)
             self?.navigationItem.title = city
-
         }
-       
-        
-       
-
     }
     
 
@@ -64,7 +59,7 @@ class ForecastController: UIViewController {
 }
 
 //MARK: - UITableViewDelegate
-extension ForecastController: UITableViewDelegate{
+extension ForecastController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -73,7 +68,7 @@ extension ForecastController: UITableViewDelegate{
 }
 
 //MARK: - UITableViewDataSource
-extension ForecastController: UITableViewDataSource{
+extension ForecastController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         

@@ -50,40 +50,33 @@ class WeatherController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
-        
         locationManager.startUpdating()
         locationManager.didUpdateLocation = { [weak self] location, city in
             self?.setLabels(forLocation: location, inCity: city)
         }
-        
-    
-        
-        
-        
     }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
         case "mainToForecast":
             if let destination = segue.destination as? ForecastController{
                 
                 destination.tempUnit = tempUnit
-                
             }
         default: break
         }
     }
     
     
-    deinit{
+    deinit {
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidBecomeActive, object: nil)
         
     }
     
     
     //MARK: - Public methods
-    func checkLocationServicesStatus(){
+    func checkLocationServicesStatus() {
         locationManager.checkLocationServices(
             noAccess: { (alert) in
                 self.present(alert, animated: true, completion: {})
@@ -94,17 +87,16 @@ class WeatherController: UIViewController {
     
     }
     
-    func setLabels(forLocation location: CLLocation, inCity city: String){
+    func setLabels(forLocation location: CLLocation, inCity city: String) {
         
         
         weatherManager.persistCurrentWeather( forCity: city, forTemperatureUnit: tempUnit, successHandler: { (weather) in
             
                                                 DispatchQueue.main.async {
                                                         self.cityLabel.text = city
-                                                    
                                                         self.locationLabel.text = "\(location.coordinate.latitude), \(location.coordinate.longitude)"
                                                     if let weather = weather{
-                                                        self.setTemperatureLabels(weather)
+                                                        self.setTemperatureLabels(withWeather: weather)
                                                     }
                                                         
                                                     
@@ -119,22 +111,25 @@ class WeatherController: UIViewController {
         
     
     }
-    func updateTemperatureLabels(forTempertureUnit unit: TemperatureUnit){
-        currentTemperature = unit.switchUnits(forTemperature: currentTemperature)
-        maxTemperature = unit.switchUnits(forTemperature: maxTemperature)
-        minTemperature = unit.switchUnits(forTemperature: minTemperature)
+    func updateTemperatureLabels(forTempertureUnit unit: TemperatureUnit = .undefined) {
+        
+        if unit != .undefined{
+            currentTemperature = unit.switchUnits(forTemperature: currentTemperature)
+            maxTemperature = unit.switchUnits(forTemperature: maxTemperature)
+            minTemperature = unit.switchUnits(forTemperature: minTemperature)
+        }
         tempLabel.text = "\(currentTemperature)\(tempUnit.measureUnit())"
         maxTempLabel.text = "\(maxTemperature)\(tempUnit.measureUnit())"
         minTempLabel.text = "\(minTemperature)\(tempUnit.measureUnit())"
     }
+    
     //MARK: - Private methods
-    fileprivate func setTemperatureLabels(_ weather:Weather){
+    fileprivate func setTemperatureLabels(withWeather weather: Weather) {
+        
         currentTemperature = weather.currentTemp!
         minTemperature = weather.minTemp!
         maxTemperature = weather.maxTemp!
-        tempLabel.text = "\(currentTemperature)\(tempUnit.measureUnit())"
-        maxTempLabel.text = "\(maxTemperature)\(tempUnit.measureUnit())"
-        minTempLabel.text = "\(minTemperature)\(tempUnit.measureUnit())"
+        updateTemperatureLabels()
     }
     
 }

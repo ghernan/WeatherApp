@@ -12,7 +12,7 @@ public enum WeatherInfoType{
     case current
     case forecast
     
-    func getURLStringComponent() -> String{
+    func getURLStringComponent() -> String {
         switch self{
         case .current:
             return "weather"
