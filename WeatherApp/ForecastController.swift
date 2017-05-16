@@ -33,9 +33,9 @@ class ForecastController: UIViewController {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         locationManager.startUpdating()
-        locationManager.didUpdateLocation = { location, city in
-            self.getForecast(inCity: city)
-            self.navigationItem.title = city
+        locationManager.didUpdateLocation = { [weak self] location, city in
+            self?.getForecast(inCity: city)
+            self?.navigationItem.title = city
 
         }
        

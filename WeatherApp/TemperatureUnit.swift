@@ -43,5 +43,15 @@ public enum TemperatureUnit : Int{
             return ""
         }
     }
+    func switchUnits(forTemperature temperature: Int ) -> Int {
+        switch self {
+        case .celsius:
+            return (temperature-32)*5/9
+        case .fahrenheit:
+            return (temperature*9/5)+32
+        case .undefined:
+            return 0
+        }
+    }
 }
 

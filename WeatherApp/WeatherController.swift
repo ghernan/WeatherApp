@@ -13,23 +13,19 @@ class WeatherController: UIViewController {
     
     private let weatherManager = WeatherManager()
     private let locationManager = LocationManager()
-    
+    private var minTemperature = 0
+    private var maxTemperature = 0
+    private var currentTemperature = 0
     private var tempUnit: TemperatureUnit = .celsius
     
     
     //MARK: - IBOutlets from UI
     
     @IBOutlet weak var cityLabel: UILabel!
-    
     @IBOutlet weak var locationLabel: UILabel!
-    
     @IBOutlet weak var tempLabel: UILabel!
-    
     @IBOutlet weak var maxTempLabel: UILabel!
-    
     @IBOutlet weak var minTempLabel: UILabel!
-    
-    
     @IBOutlet weak var degreeLabel: UILabel!
     
     //MARK: - IBActions from UI Components
@@ -41,9 +37,9 @@ class WeatherController: UIViewController {
     
     @IBAction func changeDegreeUnit(_ sender: UISegmentedControl) {
         let unit = TemperatureUnit(rawValue: sender.selectedSegmentIndex)!
-        tempUnit = unit
-        
+        tempUnit = unit        
         degreeLabel.text = tempUnit.name()
+        updateTemperatureLabels(forTempertureUnit: tempUnit)
         
     }
     
@@ -58,8 +54,8 @@ class WeatherController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
         
         locationManager.startUpdating()
-        locationManager.didUpdateLocation = { location, city in
-            self.setLabels(forLocation: location, inCity: city)
+        locationManager.didUpdateLocation = { [weak self] location, city in
+            self?.setLabels(forLocation: location, inCity: city)
         }
         
     
@@ -123,12 +119,24 @@ class WeatherController: UIViewController {
         
     
     }
+    func updateTemperatureLabels(forTempertureUnit unit: TemperatureUnit){
+        currentTemperature = unit.switchUnits(forTemperature: currentTemperature)
+        maxTemperature = unit.switchUnits(forTemperature: maxTemperature)
+        minTemperature = unit.switchUnits(forTemperature: minTemperature)
+        tempLabel.text = "\(currentTemperature)\(tempUnit.measureUnit())"
+        maxTempLabel.text = "\(maxTemperature)\(tempUnit.measureUnit())"
+        minTempLabel.text = "\(minTemperature)\(tempUnit.measureUnit())"
+    }
     //MARK: - Private methods
     fileprivate func setTemperatureLabels(_ weather:Weather){
-        tempLabel.text = "\(weather.currentTemp!)\(tempUnit.measureUnit())"
-        maxTempLabel.text = "\(weather.maxTemp!)\(tempUnit.measureUnit())"
-        minTempLabel.text = "\(weather.minTemp!)\(tempUnit.measureUnit())"
+        currentTemperature = weather.currentTemp!
+        minTemperature = weather.minTemp!
+        maxTemperature = weather.maxTemp!
+        tempLabel.text = "\(currentTemperature)\(tempUnit.measureUnit())"
+        maxTempLabel.text = "\(maxTemperature)\(tempUnit.measureUnit())"
+        minTempLabel.text = "\(minTemperature)\(tempUnit.measureUnit())"
     }
+    
 }
 
 

@@ -113,10 +113,14 @@ extension LocationManager : CLLocationManagerDelegate {
         self.currentLongitude = self.currentLocation.coordinate.longitude
         NotificationCenter.default.post(name: Notification.Name("locationUpdated"), object: self, userInfo: nil)
         getReverseLocation(fromLocation: self.currentLocation, successHandler: { (cityString) in
-                                                                self.currentCity = cityString
-                                              self.didUpdateLocation?(self.currentLocation, self.currentCity)
+                                                                if self.currentCity != cityString  {
+                                                                    self.currentCity = cityString
+                                                                    self.didUpdateLocation?(self.currentLocation, self.currentCity)
+                                                                    
+
             
-                                            },
+                                                                }
+                                                            },
                                                               errorHandler: {error in
                                                                 print(error)
                                                               })
