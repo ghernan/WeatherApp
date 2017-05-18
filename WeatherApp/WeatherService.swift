@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 class WeatherService{
     
@@ -18,23 +19,23 @@ class WeatherService{
     
     func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined, successHandler: @escaping (_ dict: JSONDictionary)->(),  errorHandler:@escaping (_ error:Error)->()){
         
-        let task = apiManager.session.dataTask(with: createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit)) { (data, response, error) in
-            
-            guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                errorHandler(error!)
-                return
-            }
-            do {
-                let dict = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! JSONDictionary
-                successHandler(dict)
-            } catch let parseError {
-                print("JSONSerialization error: \(parseError.localizedDescription)\n")
-                errorHandler(parseError)
-            }
-            
+        Alamofire.request(createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit))
+            .validate()
+            .responseData { response in
+                switch response.result {
+                case .success:
+                    do {
+                        let dict = try JSONSerialization.jsonObject(with: response.data!, options: .mutableContainers) as! JSONDictionary
+                        successHandler(dict)
+                    } catch let parseError {
+                        print("JSONSerialization error: \(parseError.localizedDescription)\n")
+                        errorHandler(parseError)
+                    }
+
+                case .failure(let error):
+                    errorHandler(error)
+                }
         }
-        task.resume()
-        
     }
     
     //MARK: - Private methods
