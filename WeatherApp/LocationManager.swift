@@ -15,22 +15,15 @@ protocol LocationManagerDelegate : class{
 
 }
 
-class LocationManager: NSObject {
-    
-    
-    fileprivate var currentLocation : CLLocation!
-    var currentLatitude = 0.0
-    var currentLongitude = 0.0
-    fileprivate var currentCity = "Chihuahua"
+class LocationManager: NSObject { 
+
     var didUpdateLocation:((_ location: CLLocation, _ city: String) -> Void)?
     
-    
-    fileprivate weak var delegate : LocationManagerDelegate?
     
     private let coreLocationManager: CLLocationManager = {
         
         let manager = CLLocationManager()
-        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         manager.requestWhenInUseAuthorization()
         return manager
     }()
@@ -54,7 +47,9 @@ class LocationManager: NSObject {
             case .notDetermined, .restricted, .denied:
                 noAccess(notifyUser())
             case .authorizedAlways, .authorizedWhenInUse:
+                
                 withAccess("Weather App has been previously authorized for location services.")
+                
             }
         }
         else {
@@ -108,20 +103,19 @@ extension LocationManager : CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        self.currentLocation = locations.last
-        self.currentLatitude = self.currentLocation.coordinate.latitude
-        self.currentLongitude = self.currentLocation.coordinate.longitude
+        
+        let currentLoccation = locations.last!
         NotificationCenter.default.post(name: Notification.Name("locationUpdated"), object: self, userInfo: nil)
-        getReverseLocation(fromLocation: self.currentLocation, successHandler: { (cityString) in
-            
-                                                                if self.currentCity != cityString  {
-                                                                    self.currentCity = cityString
-                                                                    self.didUpdateLocation?(self.currentLocation, self.currentCity)
-                                                                }
-                                                            },
-                                                              errorHandler: {error in
-                                                                print(error)
-                                                              })
+        getReverseLocation(fromLocation: currentLoccation,
+                           successHandler: { (cityString) in
+                            
+                                self.didUpdateLocation?(currentLoccation, cityString)
+                                self.stopUpdating()
+                                
+                            },
+                           errorHandler: {error in
+                                print(error)
+                            })
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

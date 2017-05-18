@@ -52,8 +52,9 @@ class WeatherController: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(checkLocationServicesStatus), name: .UIApplicationDidBecomeActive, object: nil)
         locationManager.startUpdating()
-        locationManager.didUpdateLocation = { [weak self] location, city in
-            self?.setLabels(forLocation: location, inCity: city)
+        locationManager.didUpdateLocation = { location, city in
+            self.setLabels(forLocation: location, inCity: city)
+            
         }
     }
     
@@ -82,6 +83,7 @@ class WeatherController: UIViewController {
                 self.present(alert, animated: true, completion: {})
         },
             withAccess: {message in
+                self.locationManager.startUpdating()
                 print(message)
         })
     
@@ -89,28 +91,22 @@ class WeatherController: UIViewController {
     
     func setLabels(forLocation location: CLLocation, inCity city: String) {
         
-        
-        weatherManager.persistCurrentWeather( forCity: city, forTemperatureUnit: tempUnit, successHandler: { (weather) in
+        weatherManager.persistCurrentWeather( forCity: city, forTemperatureUnit: tempUnit,
+        successHandler: { (weather) in
             
-                                                DispatchQueue.main.async {
-                                                        self.cityLabel.text = city
-                                                        self.locationLabel.text = "\(location.coordinate.latitude), \(location.coordinate.longitude)"
-                                                    if let weather = weather{
-                                                        self.setTemperatureLabels(withWeather: weather)
-                                                    }
-                                                        
-                                                    
-                                                }
-            
-            
-            
-                                                },
-                                                errorHandler: {error in
-                                                    print(error)
-                                                })
-        
-    
+            DispatchQueue.main.async {
+                self.cityLabel.text = city
+                self.locationLabel.text = "\(location.coordinate.latitude), \(location.coordinate.longitude)"
+                if let weather = weather{
+                    self.setTemperatureLabels(withWeather: weather)
+                }
+            }
+        },
+        errorHandler: {error in
+            print(error)
+        })
     }
+    
     func updateTemperatureLabels(forTempertureUnit unit: TemperatureUnit = .undefined) {
         
         if unit != .undefined{
