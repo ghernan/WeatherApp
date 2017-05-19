@@ -6,49 +6,38 @@
 //  Copyright © 2017 Antonio  Hernandez . All rights reserved.
 //
 
-import Foundation
+import ObjectMapper
 
-class Weather {
+class Weather: Mappable {
     var minTemp: Int?
     var maxTemp: Int?
     var currentTemp: Int?
     var dateString = ""
     var tempUnit: TemperatureUnit = .undefined
     
-    
-    init(with dictionary: JSONDictionary) throws {
-        guard let min = dictionary["temp_min"] as? Int else {
-            throw SerializationError.missing(
-                message: "Minimum Temperature")
-            
-        }
-        guard let max = dictionary["temp_max"] as? Int else {
-            throw SerializationError.missing(message: "Maximum Temperature")
-        }
-        guard let current = dictionary["temp"] as? Int else {
-            throw SerializationError.missing(message: "Current Temperature")
-        }
-        minTemp = min
-        maxTemp = max
-        currentTemp = current
+    required init?(map: Map) {
+        mapping(map: map)
     }
     
-    init(withJSONForecast weather: JSONDictionary, withUnixTimeStamp stamp: Double) throws {
-        guard let min = weather["min"] as? Int else {
-            throw SerializationError.missing(message: "Minimum Temperature")
-            
+    func mapping(map: Map) {
+        var stamp = 0.0
+        
+        minTemp     <- map["main.temp_min"]
+        if minTemp == nil {
+            minTemp     <- map["temp.min"]
         }
-        guard let max = weather["max"] as? Int else {
-            throw SerializationError.missing(message: "Maximum Temperature")
+        maxTemp     <- map["main.temp_max"]
+        if maxTemp == nil {
+            maxTemp     <- map["temp.max"]
         }
-        guard let current = weather["eve"] as? Int else {
-            throw SerializationError.missing(message: "Current Temperature")
+        currentTemp <- map["main.temp"]
+        if currentTemp == nil {
+            currentTemp     <- map["temp.eve"]
         }
-        minTemp = min
-        maxTemp = max
-        currentTemp = current
+        stamp <- map["dt"]
         dateString = Date(timeIntervalSince1970: stamp).dayName()
     }
+
 }
 
 

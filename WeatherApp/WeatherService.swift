@@ -17,7 +17,7 @@ class WeatherService{
     
     //MARK: - Public methods
     
-    func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined, successHandler: @escaping (_ dict: JSONDictionary)->(),  errorHandler:@escaping (_ error:Error)->()){
+    func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined, successHandler: @escaping (_ dictionary: [String : Any])->(),  errorHandler:@escaping (_ error:Error)->()){
         
         Alamofire.request(createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit))
             .validate()
@@ -25,8 +25,8 @@ class WeatherService{
                 switch response.result {
                 case .success:
                     do {
-                        let dict = try JSONSerialization.jsonObject(with: response.data!, options: .mutableContainers) as! JSONDictionary
-                        successHandler(dict)
+                        let dictionary = try JSONSerialization.jsonObject(with: response.data!, options: .mutableContainers) as! [String : Any]
+                        successHandler(dictionary)
                     } catch let parseError {
                         print("JSONSerialization error: \(parseError.localizedDescription)\n")
                         errorHandler(parseError)

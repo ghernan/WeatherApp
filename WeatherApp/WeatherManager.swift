@@ -6,7 +6,7 @@
 //  Copyright © 2017 Antonio  Hernandez . All rights reserved.
 //
 
-import Foundation
+import ObjectMapper
 
 class WeatherManager{
     
@@ -45,40 +45,27 @@ class WeatherManager{
     
     //MARK: - Private methods
     
-    private func getParsedForecast(fromJSONDictionary dict: JSONDictionary, withTemperatureUnit unit: TemperatureUnit) -> [Weather] {
+    private func getParsedForecast(fromJSONDictionary dictionary: [String : Any], withTemperatureUnit unit: TemperatureUnit) -> [Weather] {
         var forecast : [Weather] = []
-        guard let results = dict["list"] as? [JSONDictionary]  else {
+        
+        guard let results = dictionary["list"] as? [[String : Any]] else {
             print("Dictionary does not contain results key\n")
             return forecast
         }
-        for weatherDict in results {
+        for weatherDictionary in results {          
             
-            guard let weatherJSONObj = weatherDict["temp"] as? JSONDictionary else {
-                print("Dictionary does not contain temp key")
-                return forecast
-            }
-            guard let date = weatherDict["dt"] as? Double else {
-                print("Dictionary does not contain dt key")
-                return forecast
-            }
-            if let weather = try? Weather(withJSONForecast: weatherJSONObj, withUnixTimeStamp: date){
+            if let weather = Mapper<Weather>().map(JSON: weatherDictionary){
                 weather.tempUnit = unit
                 forecast.append(weather)
             }
-            
         }
-
         return forecast
     }
     
-    private func getParsedWeather(fromJSONDictionary dict: JSONDictionary) -> Weather? {
-        var weather : Weather!
+    private func getParsedWeather(fromJSONDictionary dictionary: [String : Any]) -> Weather? {
+        var weather : Weather!        
         
-        guard let weatherDictionary = dict["main"] as? JSONDictionary  else {
-            print("Dictionary does not contain results key\n")
-            return weather
-        }
-        if let currentWeather = try? Weather(with: weatherDictionary){
+        if let currentWeather =  Mapper<Weather>().map(JSON: dictionary) {
             weather = currentWeather
         }
         
