@@ -54,7 +54,7 @@ class WeatherManager{
         }
         for weatherDictionary in results {          
             
-            if let weather = Mapper<Weather>().map(JSON: weatherDictionary){
+            if let weather = Mapper<ForecastWeather>().map(JSON: weatherDictionary){
                 weather.tempUnit = unit
                 forecast.append(weather)
             }
@@ -65,7 +65,7 @@ class WeatherManager{
     private func getParsedWeather(fromJSONDictionary dictionary: [String : Any]) -> Weather? {
         var weather : Weather!        
         
-        if let currentWeather =  Mapper<Weather>().map(JSON: dictionary) {
+        if let currentWeather =  Mapper<CurrentWeather>().map(JSON: dictionary) {
             weather = currentWeather
         }
         

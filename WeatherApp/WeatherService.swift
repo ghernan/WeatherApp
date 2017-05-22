@@ -19,7 +19,7 @@ class WeatherService{
     
     func getWeather(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined, successHandler: @escaping (_ dictionary: [String : Any])->(),  errorHandler:@escaping (_ error:Error)->()){
         
-        Alamofire.request(createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit))
+        apiManager.sessionManager.request(createURL(withWeatherInfo: type, forCity: cityString, forTemperatureUnit: unit))
             .validate()
             .responseData { response in
                 switch response.result {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ObjectMapper
 
 extension Date{
     
@@ -18,4 +19,17 @@ extension Date{
         
         return dayName == formatter.string(from: Date()) ? "Today" : dayName
     }
+    
+    static let dayStringName = TransformOf<String, Double>(fromJSON: { (value: Double?) -> String? in
+        if let timeStamp = value {
+            return Date(timeIntervalSince1970: value!).dayName()
+        }
+        return nil
+        
+    }, toJSON: { (value: String?) -> Double? in
+        if let value = value {
+            return Double(value)
+        }
+        return nil
+    })
 }

@@ -6,6 +6,4 @@
 //  Copyright © 2017 Antonio  Hernandez . All rights reserved.
 //
 
-import Foundation
 
-typealias JSONDictionary = [String : Any?]
