@@ -18,6 +18,5 @@ class CurrentWeather: Weather {
         maxTemp     <- map["main.temp_max"]
         currentTemp <- map["main.temp"]
         
-    }
-    
+    }    
 }

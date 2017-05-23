@@ -43,33 +43,29 @@ class WeatherManager{
                                 })
     }
     
+    
     //MARK: - Private methods
     
     private func getParsedForecast(fromJSONDictionary dictionary: [String : Any], withTemperatureUnit unit: TemperatureUnit) -> [Weather] {
-        var forecast : [Weather] = []
         
         guard let results = dictionary["list"] as? [[String : Any]] else {
             print("Dictionary does not contain results key\n")
+            return []
+        }
+        if let forecast = Mapper<ForecastWeather>().mapArray(JSONArray: results) {
             return forecast
         }
-        for weatherDictionary in results {          
-            
-            if let weather = Mapper<ForecastWeather>().map(JSON: weatherDictionary){
-                weather.tempUnit = unit
-                forecast.append(weather)
-            }
-        }
-        return forecast
+        
+        return []
     }
     
-    private func getParsedWeather(fromJSONDictionary dictionary: [String : Any]) -> Weather? {
-        var weather : Weather!        
+    private func getParsedWeather(fromJSONDictionary dictionary: [String : Any]) -> Weather? {        
         
         if let currentWeather =  Mapper<CurrentWeather>().map(JSON: dictionary) {
-            weather = currentWeather
+            return currentWeather
         }
         
-        return weather
+        return nil
     }
 
 

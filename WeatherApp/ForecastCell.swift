@@ -21,10 +21,10 @@ class ForecastCell: UITableViewCell{
         return String(describing: self)
     }
     
-    func configureCell(withWeather weather: Weather) {
+    func configureCell(withWeather weather: Weather, withTemperatureUnit unit: TemperatureUnit) {
         
-            maxTempLabel.text = "\(weather.maxTemp!)\(weather.tempUnit.measureUnit())"
-            minTempLabel.text = "\(weather.minTemp!)\(weather.tempUnit.measureUnit())"
+            maxTempLabel.text = "\(weather.maxTemp!)\(unit.measureUnit())"
+            minTempLabel.text = "\(weather.minTemp!)\(unit.measureUnit())"
             dayLabel.text = weather.dateString        
     }
 }

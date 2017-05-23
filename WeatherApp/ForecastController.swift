@@ -78,7 +78,7 @@ extension ForecastController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ForecastCell.reusableIdentifier) as! ForecastCell
         let index = indexPath.row
         let weather = forecast[index]
-        cell.configureCell(withWeather: weather )
+        cell.configureCell(withWeather: weather, withTemperatureUnit: tempUnit )
         return cell
     }    
 }

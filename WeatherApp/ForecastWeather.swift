@@ -20,5 +20,4 @@ class ForecastWeather: Weather {
         dateString      <- (map["dt"], Date.dayStringName)
         
     }
-    
 }

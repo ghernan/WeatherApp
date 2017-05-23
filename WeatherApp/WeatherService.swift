@@ -41,12 +41,14 @@ class WeatherService{
     //MARK: - Private methods
 
     private func createURL(withWeatherInfo type: WeatherInfoType, forCity cityString: String="", forTemperatureUnit unit: TemperatureUnit = .undefined) -> URL {
+        
         let urlWeatherStringComponent = type.getURLStringComponent()
         let urlWeatherQueryList  = getURLWeatherQueryItemsList(forCity: cityString, forTemperatureUnit: unit)
         return apiManager.returnURL(fromURLStringComponent: urlWeatherStringComponent, withQueryItems: urlWeatherQueryList)
     }
     
     private func getURLWeatherQueryItemsList(forCity cityString: String="",  forTemperatureUnit unit: TemperatureUnit = .undefined) -> [URLQueryItem] {
+        
         if cityString != ""{
             queryCityItem.value = cityString
         }
