@@ -19,7 +19,7 @@ class WeatherManager{
         weatherService.getWeather(withWeatherInfo: .forecast,forCity:cityString, forTemperatureUnit: unit,
                                   successHandler: { (dictionary) in
             
-                                    let forecast = self.getParsedForecast(fromJSONDictionary: dictionary, withTemperatureUnit: unit)
+                                    let forecast = self.getParsedForecast(fromJSONDictionary: dictionary)
                                     successHandler(forecast)
                                    
                                 },
@@ -46,7 +46,7 @@ class WeatherManager{
     
     //MARK: - Private methods
     
-    private func getParsedForecast(fromJSONDictionary dictionary: [String : Any], withTemperatureUnit unit: TemperatureUnit) -> [Weather] {
+    private func getParsedForecast(fromJSONDictionary dictionary: [String : Any]) -> [Weather] {
         
         guard let results = dictionary["list"] as? [[String : Any]] else {
             print("Dictionary does not contain results key\n")
